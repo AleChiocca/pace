@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Facciamo pace?</title>
+  <!-- Importa font romantici da Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Roboto:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+      font-family: 'Roboto', sans-serif;
+      overflow: hidden;
+    }
+    .container {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      text-align: center;
+      padding-top: 80px;
+      color: #fff;
+    }
+    h1 {
+      font-family: 'Pacifico', cursive;
+      font-size: 3em;
+      color: #ffe066;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.4);
+      margin-bottom: 40px;
+      transition: opacity 0.5s;
+    }
+    .buttons {
+      margin-bottom: 40px;
+    }
+    button {
+      background-color: #ff6b81;
+      border: none;
+      padding: 15px 30px;
+      font-size: 1.3em;
+      color: #fff;
+      border-radius: 30px;
+      margin: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.2s;
+      font-family: 'Pacifico', cursive;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+    }
+    button:hover {
+      background-color: #ff4757;
+      transform: scale(1.05);
+    }
+    .heart {
+      display: none;
+      font-size: 2em;
+      color: #ff4757;
+      animation: beat 1s infinite;
+      margin-top: 20px;
+    }
+    .big-heart {
+      font-size: 8em;
+      margin-bottom: 20px;
+    }
+    @keyframes beat {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+    /* Cuori animati sullo sfondo */
+    .background-heart {
+      position: absolute;
+      font-size: 2em;
+      color: rgba(255, 255, 255, 0.3);
+      animation: float linear infinite;
+    }
+    @keyframes float {
+      from { transform: translateY(110vh) rotate(0deg); opacity: 0; }
+      50% { opacity: 1; }
+      to { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+    }
+    /* Stile per il nuovo messaggio */
+    #message {
+      display: none;
+      text-align: center;
+    }
+    #message h2 {
+      font-family: 'Pacifico', cursive;
+      font-size: 2.5em;
+      color: #ffe066;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.4);
+      margin-bottom: 20px;
+    }
+    #message p {
+      font-family: 'Pacifico', cursive;
+      font-size: 2em;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1 id="question">Facciamo pace?</h1>
+    <div class="buttons">
+      <button id="si">Sì</button>
+      <button id="no">No</button>
+    </div>
+    <div id="message" class="heart">
+      <h2>Pace fatta amoruccio</h2>
+      <div class="big-heart">❤️</div>
+      <p>TI AMO BAROZZAZZIONE MIA</p>
+    </div>
+  </div>
+
+  <!-- Audio locale: inserisci il percorso corretto del file audio -->
+  <audio id="bg-music" src="/audio/Cesare Cremonini - Poetica (per pianoforte e voce)-[AudioTrimmer.com].mp3"></audio>
+
+  <!-- Genera cuori animati sullo sfondo -->
+  <script>
+    const body = document.body;
+    const numHearts = 30;
+    for (let i = 0; i < numHearts; i++) {
+      const heart = document.createElement('div');
+      heart.classList.add('background-heart');
+      heart.textContent = '❤️';
+      heart.style.left = Math.random() * 100 + 'vw';
+      heart.style.top = Math.random() * 100 + 'vh';
+      heart.style.fontSize = (10 + Math.random() * 30) + 'px';
+      heart.style.animationDuration = (5 + Math.random() * 10) + 's';
+      heart.style.animationDelay = Math.random() * 5 + 's';
+      body.appendChild(heart);
+    }
+  </script>
+
+  <script>
+    const noButton = document.getElementById('no');
+    const siButton = document.getElementById('si');
+    const message = document.getElementById('message');
+    const question = document.getElementById('question');
+    const container = document.querySelector('.container');
+    const bgMusic = document.getElementById('bg-music');
+
+    // Sposta il bottone "No" in maniera casuale per evitare il click
+    noButton.addEventListener('mouseover', function() {
+      const containerWidth = container.clientWidth - noButton.clientWidth;
+      const containerHeight = container.clientHeight - noButton.clientHeight;
+      const randomX = Math.floor(Math.random() * containerWidth);
+      const randomY = Math.floor(Math.random() * containerHeight);
+      noButton.style.position = 'absolute';
+      noButton.style.left = randomX + 'px';
+      noButton.style.top = randomY + 'px';
+    });
+
+    // Al click su "Sì" mostra il messaggio d'amore e avvia l'audio di sottofondo
+    siButton.addEventListener('click', function() {
+      document.querySelector('.buttons').style.display = 'none';
+      question.style.opacity = '0'; // Nasconde la domanda
+      setTimeout(() => {
+        question.style.display = 'none'; // La rimuove dopo la transizione
+        message.style.display = 'block'; // Mostra il nuovo messaggio
+      }, 500);
+      
+      // Avvia l'audio; l'interazione dell'utente (click) dovrebbe permetterne l'avvio
+      bgMusic.play().catch(function(error) {
+        console.error("Impossibile avviare l'audio:", error);
+      });
+    });
+  </script>
+
+</body>
+</html>
